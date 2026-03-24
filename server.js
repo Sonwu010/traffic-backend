@@ -7,21 +7,25 @@ app.use(express.json());
 
 let visitors = [];
 
+// 🔥 IMPORTANT: use dynamic port (Render needs this)
+const PORT = process.env.PORT || 3000;
+
 // Log visitor
 app.post("/log", (req, res) => {
-  visitors.push({
-    time: new Date()
-  });
+  visitors.push({ time: new Date() });
   res.send({ status: "logged" });
 });
 
 // Send stats
 app.get("/stats", (req, res) => {
-  res.send({
-    total: visitors.length
-  });
+  res.send({ total: visitors.length });
 });
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+// Optional: test route
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
