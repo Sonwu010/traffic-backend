@@ -6,26 +6,34 @@ app.use(cors());
 app.use(express.json());
 
 let visitors = [];
+let labels = [];
 
-// 🔥 IMPORTANT: use dynamic port (Render needs this)
-const PORT = process.env.PORT || 3000;
-
-// Log visitor
+// 📌 Log visitor
 app.post("/log", (req, res) => {
-  visitors.push({ time: new Date() });
-  res.send({ status: "logged" });
+  const time = new Date().toLocaleTimeString();
+
+  visitors.push(1);
+  labels.push(time);
+
+  if (visitors.length > 10) {
+    visitors.shift();
+    labels.shift();
+  }
+
+  res.send("Logged");
 });
 
-// Send stats
+// 📊 Send stats
 app.get("/stats", (req, res) => {
-  res.send({ total: visitors.length });
+  res.json({
+    labels: labels,
+    visitors: visitors.map((_, i) => i + 1)
+  });
 });
 
-// Optional: test route
 app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("Server running"));
